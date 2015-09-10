@@ -25,6 +25,7 @@ public class chat extends AppCompatActivity {
     InetAddress serverAddress;
     int serverPort;
     DatagramSocket socket;
+    threadControl tC = new threadControl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class chat extends AppCompatActivity {
 
     public void startThreads() {
         new sendThread(socket, username, serverAddress, serverPort, chatTextView, sendBox, sendButton).start();
+        new recThread(socket, chatTextView, tC).start();
     }
 
     public void initializeConnection() {
@@ -60,6 +62,7 @@ public class chat extends AppCompatActivity {
     }
     //overwrite backpress to close socket so we don't error out
     public void onBackPressed() {
+        tC.setTrue();
         socket.close();
         super.onBackPressed();
     }

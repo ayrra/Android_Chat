@@ -22,7 +22,6 @@ public class sendThread extends Thread {
     TextView ctv;
     EditText sendBox;
     Button sb;
-    boolean sbLock = false;
 
     public sendThread(DatagramSocket sock, String name, InetAddress address, int port, TextView chatTextView, EditText sendBox, Button sendButton) {
         this.s = sock;
