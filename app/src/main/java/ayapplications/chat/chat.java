@@ -1,7 +1,6 @@
 package ayapplications.chat;
 
 import android.content.Intent;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -60,7 +57,7 @@ public class chat extends AppCompatActivity {
         }
     }
 
-    //overwrite backpress to close socket so we don't error out 
+    //overwrite backpress to close socket so we don't error out
     public void onBackPressed() {
         tC.setTrue();
         new sendString(socket, serverAddress, serverPort, drop).start();    //we use this to send a disconnect to the server
