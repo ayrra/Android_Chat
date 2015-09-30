@@ -60,7 +60,7 @@ public class chat extends AppCompatActivity {
         }
     }
 
-    //overwrite backpress to close socket so we don't error out
+    //overwrite backpress to close socket so we don't error out 3
     public void onBackPressed() {
         tC.setTrue();
         new sendString(socket, serverAddress, serverPort, drop).start();    //we use this to send a disconnect to the server
