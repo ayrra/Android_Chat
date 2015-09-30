@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -21,6 +23,7 @@ public class chat extends AppCompatActivity {
     EditText sendBox;
     TextView chatTextView;
     String username;
+    String drop = "c139af0a9b21303eadaa942b45059e";
 
     InetAddress serverAddress;
     int serverPort;
@@ -33,23 +36,19 @@ public class chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
-
         initializeVar();
         initializeConnection();
         startThreads();
     }
 
     public void startThreads() {
-        new sendThread(socket, username, serverAddress, serverPort, chatTextView, sendBox, sendButton).start();
-        new recThread(socket, chatTextView, tC).start();
+        new sendThread(socket, username, serverAddress, serverPort, chatTextView, sendBox, sendButton, tC).start();
+        new recThread(socket, serverAddress, serverPort, chatTextView, tC).start();
     }
 
     public void initializeConnection() {
         try {
-            serverAddress = InetAddress.getByName("107.191.119.237");
+            serverAddress = InetAddress.getByName("52.26.74.218");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -60,11 +59,19 @@ public class chat extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     //overwrite backpress to close socket so we don't error out
     public void onBackPressed() {
         tC.setTrue();
-        socket.close();
+        new sendString(socket, serverAddress, serverPort, drop).start();    //we use this to send a disconnect to the server
         super.onBackPressed();
+    }
+
+    public void onPause() {
+        tC.setTrue();
+        new sendString(socket, serverAddress, serverPort, drop).start();    //we use this to send a disconnect to the server
+        super.onBackPressed();
+        super.onPause();
     }
 
     private void initializeVar() {

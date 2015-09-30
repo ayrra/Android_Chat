@@ -14,7 +14,6 @@ import java.net.InetAddress;
  * Created by andy on 9/8/15.
  */
 public class sendThread extends Thread {
-    //purposely made them hard to read
     private DatagramSocket s;
     private String n;
     InetAddress sd;
@@ -22,8 +21,9 @@ public class sendThread extends Thread {
     TextView ctv;
     EditText sendBox;
     Button sb;
+    threadControl tc;
 
-    public sendThread(DatagramSocket sock, String name, InetAddress address, int port, TextView chatTextView, EditText sendBox, Button sendButton) {
+    public sendThread(DatagramSocket sock, String name, InetAddress address, int port, TextView chatTextView, EditText sendBox, Button sendButton, threadControl tc) {
         this.s = sock;
         this.n = name;
         this.sd = address;
@@ -31,17 +31,22 @@ public class sendThread extends Thread {
         this.ctv = chatTextView;
         this.sb = sendButton;
         this.sendBox = sendBox;
+        this.tc = tc;
     }
 
     public void run() {
-        //first send the username to the server
-        byte[] connect = n.getBytes();
-        DatagramPacket connectPack = new DatagramPacket(connect, connect.length, sd,sp);
-        try {s.send(connectPack);} catch (IOException e) {
-            //System.out.println("could not send username to server");
+        if (s != null) {
+            //first send the username to the server
+            byte[] connect = n.getBytes();
+            DatagramPacket connectPack = new DatagramPacket(connect, connect.length, sd, sp);
+            try {
+                s.send(connectPack);
+            } catch (IOException e) {
+                ctv.append("could not send username to server");
+            }
+            //listen for when button is pressed, when button is pressed we send to the server
+            buttonListener();
         }
-        //listen for when button is pressed, when button is pressed we send to the server
-        buttonListener();
     }
 
     public void buttonListener() {

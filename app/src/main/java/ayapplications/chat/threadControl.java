@@ -15,4 +15,5 @@ public class threadControl {
     public boolean returnTrue() {
         return torF;
     }
+
 }
