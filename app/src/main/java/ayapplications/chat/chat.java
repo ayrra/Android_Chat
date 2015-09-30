@@ -70,7 +70,6 @@ public class chat extends AppCompatActivity {
     public void onPause() {
         tC.setTrue();
         new sendString(socket, serverAddress, serverPort, drop).start();    //we use this to send a disconnect to the server
-        super.onBackPressed();
         super.onPause();
     }
 
